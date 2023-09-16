@@ -1,3 +1,5 @@
+# Author: Kok Jim Meng
+
 # Prepare Environment
 # -----------------------------------------------------------------------------
 import arcpy as ap
