@@ -23,21 +23,16 @@ def ingest_nea_mkt_food_ct_data(nea_mkt_food_ct_path:str):
     return output
 
 # Convert CSV to XY feature class
-resale_bldg_2022_tpy_layer = "in_memory/resale_bldg_2022_tpy_layer"
-ap.management.MakeXYEventLayer_management(table=resale_bldg_2022_tpy_df,
-                                         in_x_field="longitude",
-                                         in_y_field="latitude",
-                                         out_layer=resale_bldg_2022_tpy_layer,
-                                         spatial_reference=("GEOGCS['GCS_WGS_1984',"
-                                                            + "DATUM['D_WGS_1984',"
-                                                            + "SPHEROID['WGS_1984',6378137.0,298.257223563]],"
-                                                            + "PRIMEM['Greenwich',0.0],"
-                                                            + "UNIT['Degree',0.0174532925199433]];"
-                                                            + "-20037700 -30241100 10000;-100000 10000;-100000 10000;"
-                                                            + "0.001;0.001;0.001;IsHighPrecision")
-                            )
+resale_bldg_2022_tpy_pt = "in_memory/resale_bldg_2022_tpy_pt"
+ap.management.XYTableToPoint(resale_bldg_2022_tpy_df,
+                             resale_bldg_2022_tpy_pt,
+                             "longitude",
+                             "latitude",
+                             None,
+                             'PROJCS["SVY21",GEOGCS["SVY21[WGS84]",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",28001.642],PARAMETER["False_Northing",38744.572],PARAMETER["Central_Meridian",103.8333333333333],PARAMETER["Scale_Factor",1.0],PARAMETER["Latitude_Of_Origin",1.366666666666667],UNIT["Meter",1.0]];-5595200 -10114500 10000;-100000 10000;-100000 10000;0.001;0.001;0.001;IsHighPrecision')
+
 resale_bldg_2022_tpy_fc = "in_memory/resale_bldg_2022_tpy_fc"
-ap.CopyFeatures_management(in_features=resale_bldg_2022_tpy_layer,
+ap.CopyFeatures_management(in_features=resale_bldg_2022_tpy_pt,
                            out_feature_class=resale_bldg_2022_tpy_fc);
 
 def calc_dist_weighted_mkt_food_ctr_to_resale_flat_tpy_catchment(output_gdb_path:str="..Data/processed/sum_weighted_dist_resale_flat_mkt_food_ct.gdb",
